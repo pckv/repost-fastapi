@@ -1,8 +1,6 @@
-from typing import List
-
 from pydantic import BaseModel
 
-from repost.api.schemas import User, Post
+from .user import User
 
 
 class Resub(BaseModel):
@@ -10,4 +8,3 @@ class Resub(BaseModel):
     name: str
     description: str
     owner: User
-    posts: List[Post]

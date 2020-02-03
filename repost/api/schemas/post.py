@@ -1,20 +1,19 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import Field, BaseModel
 
-from repost.api.schemas import Resub, User, Comment
+from .user import User
 
 
 class Post(BaseModel):
     """ The Post schema to be returned as a response from the API. """
     id: int
-    parent: Resub
+    parent_id: int = Field(..., description='ID of the post\'s parent resub')
     title: str
     url: Optional[str]
     content: Optional[str]
     author: User
     created: datetime
     edited: Optional[datetime]
-    comments: List[Comment]
     votes: int
