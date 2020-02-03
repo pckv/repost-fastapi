@@ -13,3 +13,9 @@ class User(BaseModel):
     resubs: List[Resub]
     posts: List[Post]
     comments: List[Comment]
+
+
+class UserCreate(BaseModel):
+    """ The user schema used to create a new User. """
+    username: str
+    password: str
