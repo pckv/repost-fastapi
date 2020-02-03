@@ -1,18 +1,20 @@
 from fastapi import APIRouter, Path, Depends
-from starlette.status import HTTP_201_CREATED
+from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from repost.api.schemas import User, UserCreate
 
 router = APIRouter()
 
 
-@router.get('/{username}', response_model=User)
+@router.get('/{username}', response_model=User,
+            responses={HTTP_404_NOT_FOUND: {'description': 'User not found'}})
 async def get_user(username: str):
     """ """
     pass
 
 
-@router.post('/', response_model=User, status_code=HTTP_201_CREATED)
+@router.post('/', response_model=User, status_code=HTTP_201_CREATED,
+             responses={HTTP_400_BAD_REQUEST: {'description': 'Username taken'}})
 async def create_user(user: UserCreate):
     """ """
     pass
