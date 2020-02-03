@@ -6,6 +6,7 @@ from repost.api.schemas import Resub, Post, Comment
 
 
 class User(BaseModel):
+    """ The User schema to be returned as a response from the API. """
     username: str
     bio: str
     avatar_url: Optional[str]

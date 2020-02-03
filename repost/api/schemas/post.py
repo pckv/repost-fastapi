@@ -7,6 +7,7 @@ from repost.api.schemas import Resub, User, Comment
 
 
 class Post(BaseModel):
+    """ The Post schema to be returned as a response from the API. """
     id: int
     parent: Resub
     title: str
