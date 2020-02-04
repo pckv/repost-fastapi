@@ -30,14 +30,6 @@ async def get_resub(resub: Resub = Depends(resolve_resub)):
     pass
 
 
-@router.patch('/{resub}', response_model=Resub,
-              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
-                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def edit_resub(*, resub: Resub = Depends(resolve_user_owned_resub), edited_resub: EditResub):
-    """ """
-    pass
-
-
 @router.delete('/{resub}',
                responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
@@ -45,3 +37,10 @@ async def delete_resub(resub: Resub = Depends(resolve_user_owned_resub)):
     """ """
     pass
 
+
+@router.patch('/{resub}', response_model=Resub,
+              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def edit_resub(*, resub: Resub = Depends(resolve_user_owned_resub), edited_resub: EditResub):
+    """ """
+    pass
