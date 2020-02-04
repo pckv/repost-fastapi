@@ -17,3 +17,13 @@ class Post(BaseModel):
     created: datetime
     edited: Optional[datetime]
     votes: int
+
+
+class CreatePost(BaseModel):
+    title: str
+    url: Optional[str]
+    content: Optional[str]
+
+
+class EditPost(CreatePost):
+    pass
