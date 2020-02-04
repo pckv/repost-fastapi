@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 
-from repost.api.schemas import User, UserCreate, Resub, Post, Comment, ErrorResponse
+from repost.api.schemas import User, CreateUser, Resub, Post, Comment, ErrorResponse
 from repost.api.security import get_current_user
 
 router = APIRouter()
@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.post('/', response_model=User, status_code=HTTP_201_CREATED,
              responses={HTTP_400_BAD_REQUEST: {'description': 'Username taken', 'model': ErrorResponse}})
-async def create_user(user: UserCreate):
+async def create_user(user: CreateUser):
     """ """
     pass
 
