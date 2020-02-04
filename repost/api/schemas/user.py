@@ -10,7 +10,7 @@ class User(BaseModel):
     avatar_url: Optional[str]
 
 
-class UserCreate(BaseModel):
+class CreateUser(BaseModel):
     """ The user schema used to create a new User. """
     username: str
     password: str
