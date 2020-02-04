@@ -27,3 +27,11 @@ async def resolve_user_owned_post(post: Post = Depends(resolve_post),
                                   current_user: User = Depends(get_current_user)) -> Post:
     """ Verify that the authorized user owns the post before returning. """
     pass
+
+
+async def resolve_post_for_post_owner_or_resub_owner(resub: Resub = Depends(resolve_resub),
+                                                     post: Post = Depends(resolve_post),
+                                                     current_user: User = Depends(get_current_user)) -> Post:
+    """ Verify that the authorized user owns the post or owns the resub before returning. """
+    pass
+
