@@ -25,5 +25,7 @@ class CreatePost(BaseModel):
     content: Optional[str]
 
 
-class EditPost(CreatePost):
-    pass
+class EditPost(BaseModel):
+    title: str = None
+    url: Optional[str] = None
+    content: Optional[str] = None
