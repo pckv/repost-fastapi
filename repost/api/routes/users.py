@@ -1,9 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from repost.api.schemas import User, UserCreate, Resub, Post, Comment
+from repost.api.security import get_current_user
 
 router = APIRouter()
 
@@ -16,19 +17,19 @@ async def create_user(user: UserCreate):
 
 
 @router.get('/me', response_model=User)
-async def get_current_user(current_user: User):  # TODO: Create dependency
+async def get_current_user(current_user: User = Depends(get_current_user)):
     """ """
     pass
 
 
 @router.patch('/me', response_model=User)
-async def edit_current_user(current_user: User):  # TODO: Finish endpoint
+async def edit_current_user(current_user: User = Depends(get_current_user)):  # TODO: Finish endpoint
     """ """
     pass
 
 
 @router.delete('/me')
-async def delete_current_user(current_user: User):  # TODO: Create dependency
+async def delete_current_user(current_user: User = Depends(get_current_user)):
     """ """
     pass
 
