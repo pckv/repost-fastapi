@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post('/', response_model=User, status_code=HTTP_201_CREATED,
-             responses={HTTP_400_BAD_REQUEST: {'description': 'Username taken', 'model': ErrorResponse}})
+             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse}})
 async def create_user(user: CreateUser):
     """ """
     pass
