@@ -57,7 +57,7 @@ async def edit_comment(*, comment: Comment = Depends(resolve_user_owned_comment)
     pass
 
 
-@router.patch('/{comment_id}/{vote}', response_model=Comment,
+@router.patch('/{comment_id}/{vote}',
               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def vote_comment(*, comment: Comment = Depends(resolve_comment), vote: Vote,

@@ -13,7 +13,7 @@ from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 
 from repost.api.resolvers import resolve_resub, resolve_post, resolve_user_owned_post, \
     resolve_post_for_post_owner_or_resub_owner
-from repost.api.schemas import ErrorResponse, User, Resub, CreatePost, Post, EditPost
+from repost.api.schemas import ErrorResponse, User, Resub, CreatePost, Post, EditPost, Vote
 from repost.api.security import get_current_user
 
 router = APIRouter()
@@ -61,4 +61,12 @@ async def edit_post(*, post: Post = Depends(resolve_user_owned_post), edited_pos
     """Edit a post in a resub.
 
     Only the author of a post can edit the post."""
+    pass
+
+
+@router.patch('/{post_id}/{vote}',
+              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def vote_post(*, post: Post = Depends(resolve_post), vote: Vote, current_user: User = Depends(get_current_user)):
+    """Vote on a post in a resub."""
     pass
