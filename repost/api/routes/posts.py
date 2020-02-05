@@ -8,8 +8,7 @@ from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 
 from repost.api.resolvers import resolve_resub, resolve_post, resolve_user_owned_post, \
     resolve_post_for_post_owner_or_resub_owner
-from repost.api.schemas import ErrorResponse, User, Resub
-from repost.api.schemas.post import CreatePost, Post
+from repost.api.schemas import ErrorResponse, User, Resub, CreatePost, Post, EditPost
 from repost.api.security import get_current_user
 
 router = APIRouter()
@@ -40,8 +39,7 @@ async def get_post(post: Post = Depends(resolve_post)):
 @router.delete('/{post_id}',
                responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def delete_post(post: Post = Depends(resolve_post_for_post_owner_or_resub_owner),
-                      current_user: User = Depends(get_current_user)):
+async def delete_post(post: Post = Depends(resolve_post_for_post_owner_or_resub_owner)):
     """Delete post"""
     pass
 
@@ -49,6 +47,6 @@ async def delete_post(post: Post = Depends(resolve_post_for_post_owner_or_resub_
 @router.patch('/{post_id}', response_model=Post,
               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def edit_post(post: Post = Depends(resolve_user_owned_post), current_user: User = Depends(get_current_user)):
+async def edit_post(*, post: Post = Depends(resolve_user_owned_post), edited_post: EditPost):
     """Edit post"""
     pass
