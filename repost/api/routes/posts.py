@@ -28,7 +28,7 @@ async def get_posts(resub: Resub = Depends(resolve_resub)):
              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def create_post(*, resub: Resub = Depends(resolve_resub),
-                      post: CreatePost, user: User = Depends(get_current_user),):
+                      post: CreatePost, user: User = Depends(get_current_user)):
     """Create new post"""
     pass
 

@@ -16,3 +16,9 @@ class CreateUser(BaseModel):
     """Schema for creating a new user account"""
     username: str
     password: str
+
+
+class EditUser(BaseModel):
+    """ """
+    bio: str = None
+    avatar_url: str = None
