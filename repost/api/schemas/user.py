@@ -19,6 +19,6 @@ class CreateUser(BaseModel):
 
 
 class EditUser(BaseModel):
-    """ """
+    """Schema for editing a user account"""
     bio: str = None
     avatar_url: str = None
