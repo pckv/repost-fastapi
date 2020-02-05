@@ -21,14 +21,10 @@ class Comment(BaseModel):
 
 
 class CreateComment(BaseModel):
+    """Schema for creating a comment in a post"""
     content: str
 
 
 class EditComment(BaseModel):
+    """Schema for editing a comment in a post"""
     content: str = None
-
-
-class Vote(str, Enum):
-    upvote = 'upvote'
-    downvote = 'downvote'
-    novote = 'novote'

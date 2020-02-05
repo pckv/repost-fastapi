@@ -1,6 +1,8 @@
 """Router for posts in respective resubs.
 
-All of the posts endpoints are prefixed under a specific resub,
+All of the posts endpoints are prefixed under a specific resub, and as
+such every endpoint must resolve a resub. This is implemented in the
+resolvers in `repost.resolvers`.
 """
 
 
