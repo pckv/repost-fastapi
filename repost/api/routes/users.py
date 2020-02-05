@@ -1,3 +1,5 @@
+"""Router for user accounts."""
+
 from typing import List
 
 from fastapi import APIRouter, Depends

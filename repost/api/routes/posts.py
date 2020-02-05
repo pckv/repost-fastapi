@@ -1,4 +1,7 @@
-"""Posts endpoints"""
+"""Router for posts in respective resubs.
+
+All of the posts endpoints are prefixed under a specific resub,
+"""
 
 
 from typing import List

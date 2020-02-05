@@ -1,4 +1,4 @@
-""" Authorization endpoints """
+"""Router for authorization."""
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 

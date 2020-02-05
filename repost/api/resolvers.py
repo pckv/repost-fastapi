@@ -1,4 +1,4 @@
-""" Dependencies for resolving and verifying paths and ownership. """
+"""Dependencies for resolving and verifying paths and ownership."""
 
 from fastapi import Path, Depends
 

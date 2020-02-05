@@ -1,3 +1,5 @@
+"""API schemas for authorization."""
+
 from pydantic.main import BaseModel
 
 

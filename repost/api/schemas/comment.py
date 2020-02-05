@@ -1,3 +1,5 @@
+"""API schemas for comments."""
+
 from datetime import datetime
 from typing import Optional
 

@@ -1,3 +1,9 @@
+"""Router for dealing with resubs.
+
+A resub is a user-created community, where fans can create related
+posts.
+"""
+
 from typing import List
 
 from fastapi import APIRouter, Depends

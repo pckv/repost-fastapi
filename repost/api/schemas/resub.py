@@ -1,3 +1,5 @@
+"""API schemas for resubs."""
+
 from pydantic import BaseModel, Field
 
 from .user import User

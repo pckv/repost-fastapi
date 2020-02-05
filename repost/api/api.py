@@ -1,3 +1,5 @@
+"""Routes for all endpoints in the API."""
+
 from fastapi import APIRouter
 
 from repost.api.routes import users, auth, resubs, posts

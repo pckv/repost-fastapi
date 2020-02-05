@@ -1,4 +1,10 @@
-""" Repost API written in FastAPI. """
+"""Repost API written in FastAPI.
+
+Authors:
+    pckv
+    EspenK
+    jonsondrem
+"""
 __version__ = '0.0.1'
 
 from fastapi import FastAPI
