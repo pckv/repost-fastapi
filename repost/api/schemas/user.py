@@ -6,13 +6,13 @@ from pydantic import BaseModel
 
 
 class User(BaseModel):
-    """ The User schema to be returned as a response from the API. """
+    """Schema for a user account"""
     username: str
     bio: str
     avatar_url: Optional[str]
 
 
 class CreateUser(BaseModel):
-    """ The user schema used to create a new User. """
+    """Schema for creating a new user account"""
     username: str
     password: str

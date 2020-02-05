@@ -6,17 +6,23 @@ from .user import User
 
 
 class Resub(BaseModel):
-    """ The Resub schema to be returned as a response from the API. """
+    """Schema for a resub
+
+    A resub is a user-created community, where fans can create related
+    posts.
+    """
     name: str
     description: str
     owner: User
 
 
 class CreateResub(BaseModel):
+    """Schema for creating a new resub"""
     name: str
     description: str
 
 
 class EditResub(BaseModel):
+    """Schema for editing a resub"""
     description: str = None
     new_owner_username: str = Field(None, description='Transfers ownership when specified')

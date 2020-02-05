@@ -9,7 +9,7 @@ from .user import User
 
 
 class Comment(BaseModel):
-    """ The Comment schema to be returned as a response from the API. """
+    """Schema for a comment in a post"""
     id: int
     parent_id: int = Field(..., description='ID of the comment\'s parent post or comment')
     content: str
