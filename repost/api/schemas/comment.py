@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -15,3 +16,17 @@ class Comment(BaseModel):
     created: datetime
     edited: Optional[datetime]
     votes: int
+
+
+class CreateComment(BaseModel):
+    content: str
+
+
+class EditComment(BaseModel):
+    content: str = None
+
+
+class Vote(str, Enum):
+    upvote = 'upvote'
+    downvote = 'downvote'
+    novote = 'novote'
