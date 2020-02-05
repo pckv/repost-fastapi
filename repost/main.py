@@ -1,9 +1,8 @@
 """Repost API written in FastAPI.
 
-Authors:
-    pckv
-    EspenK
-    jonsondrem
+[View source code on GitHub](https://github.com/pckv/repost-fastapi)
+
+Authors: pckv, EspenK, jonsondrem
 """
 __version__ = '0.0.1'
 
