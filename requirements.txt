@@ -2,3 +2,4 @@ fastapi==0.47.1
 uvicorn==0.11.2
 pyjwt==1.7.1
 python-dotenv==0.10.5
+passlib[bcrypt]==1.7.2
