@@ -34,6 +34,7 @@ def create_jwt_token(username: str, expire_delta: timedelta = timedelta(days=7))
 
 
 def get_jwt_token_username(jwt_token: str) -> str:
+    """Get username by decoding JSON Web Token"""
     data = jwt.decode(jwt_token, JWT_SECRET, JWT_ALGORITHM)
     username = data.get('sub')
     return username
