@@ -16,7 +16,7 @@ class Post(BaseModel):
     title: str
     url: Optional[str]
     content: Optional[str]
-    author: User
+    author: str
     created: datetime
     edited: Optional[datetime]
     votes: int

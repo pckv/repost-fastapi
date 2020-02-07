@@ -13,10 +13,10 @@ class Comment(BaseModel):
     """Schema for a comment in a post"""
     id: int
     parent_resub_name: str = Field(..., description='Name of the parent resub the comment was created in')
-    parent_post_id: int = Field(..., description='ID of the parent post the comment was created in')
+    parent_post_name: str = Field(..., description='ID of the parent post the comment was created in')
     parent_comment_id: Optional[int] = Field(..., description='ID of the parent comment when the comment is a reply')
     content: str
-    author: User
+    author: str
     created: datetime
     edited: Optional[datetime]
     votes: int

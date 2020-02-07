@@ -8,14 +8,15 @@ class Comment(Base):
     __tablename__ = 'comments'
 
     id = Column(Integer, primary_key=True, index=True)
-    content = Column(String, nullable=True)
+    content = Column(String)
     created = Column(DateTime)
     edited = Column(DateTime, nullable=True)
 
-    author_id = Column(Integer, ForeignKey('users.id'))
-    parent_resub_id = Column(Integer, ForeignKey('resubs.id'))
-    parent_post_id = Column(Integer, ForeignKey('posts.id'))
-    parent_comment_id = Column(Integer, ForeignKey('comment.id'))
+    author_name = Column(String, ForeignKey('users.id'))
+    parent_resub_name = Column(String, ForeignKey('resubs.name'))
+    parent_post_name = Column(String, ForeignKey('posts.title'))
+    parent_comment_id = Column(Integer, ForeignKey('comment.id'), nullable=True)
+    votes = Column(Integer)
 
     author = relationship('User', back_populates='comments')
     parent_resub = relationship('Resub', back_populates='comments')
