@@ -10,10 +10,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from .models.database import SessionLocal, engine
 
 from repost import models
 from repost.api import api_router
+from repost.database import engine
 
 env_path = Path('.') / 'config.env'
 load_dotenv(dotenv_path=env_path, verbose=True)
