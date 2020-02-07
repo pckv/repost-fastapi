@@ -12,11 +12,11 @@ from .user import User
 class Post(BaseModel):
     """Schema for a post in a resub"""
     id: int
-    parent_resub: str = Field(..., description='Name of the parent resub')
+    parent_resub_name: str = Field(..., description='Name of the parent resub')
     title: str
     url: Optional[str]
     content: Optional[str]
-    author: User
+    author: str
     created: datetime
     edited: Optional[datetime]
     votes: int
