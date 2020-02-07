@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -10,10 +10,9 @@ class Resub(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     description = Column(String, nullable=True)
-    is_active = Column(Boolean, default=True)
 
-    owner_name = Column(String, ForeignKey('users.name'))
+    owner_id = Column(Integer, ForeignKey('users.id'))
 
     owner = relationship('User', back_populates='resubs')
-    posts = relationship('Post', back_populates='resubs')
-    comments = relationship('Comment', back_populates='resubs')
+    posts = relationship('Post', back_populates='parent_resub')
+    comments = relationship('Comment', back_populates='parent_resub')

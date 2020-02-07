@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -11,12 +11,14 @@ class Comment(Base):
     content = Column(String, nullable=True)
     created = Column(DateTime)
     edited = Column(DateTime, nullable=True)
-    is_active = Column(Boolean, default=True)
 
-    owner_name = Column(String, ForeignKey('users.name'))
-    parent_resub = Column(Integer, ForeignKey('resubs.id'))
-    parent_post = Column(Integer, ForeignKey('posts.id'))
+    author_id = Column(Integer, ForeignKey('users.id'))
+    parent_resub_id = Column(Integer, ForeignKey('resubs.id'))
+    parent_post_id = Column(Integer, ForeignKey('posts.id'))
+    parent_comment_id = Column(Integer, ForeignKey('comment.id'))
 
-    owner = relationship('User', back_populates='comments')
-    resub = relationship('Resub', back_populates='comments')
-    post = relationship('Post', back_populates='comments')
+    author = relationship('User', back_populates='comments')
+    parent_resub = relationship('Resub', back_populates='comments')
+    parent_post = relationship('Post', back_populates='comments')
+
+    replies = relationship('Comment')
