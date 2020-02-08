@@ -1,14 +1,13 @@
 """Secure utility functions and setup."""
 
-import os
 from datetime import timedelta, datetime
 
 import jwt
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-JWT_SECRET = os.getenv('JWT_SECRET')
-JWT_ALGORITHM = os.getenv('JWT_ALGORITHM')
+from repost import config
+
 
 # NOTE: this path is hardcoded and correlates to repost.api.routes.auth.login
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/auth/token')
@@ -29,12 +28,12 @@ def create_jwt_token(username: str, expire_delta: timedelta = timedelta(days=7))
     expire = datetime.utcnow() + expire_delta
 
     data = {'sub': username, 'exp': expire}
-    jwt_token = jwt.encode(data, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    jwt_token = jwt.encode(data, config.jwt_secret, algorithm=config.jwt_algorithm)
     return jwt_token
 
 
 def get_jwt_token_username(jwt_token: str) -> str:
     """Get username by decoding JSON Web Token"""
-    data = jwt.decode(jwt_token, JWT_SECRET, JWT_ALGORITHM)
+    data = jwt.decode(jwt_token, config.jwt_secret, config.jwt_algorithm)
     username = data.get('sub')
     return username
