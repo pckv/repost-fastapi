@@ -15,7 +15,7 @@ class Comment(Base):
     author_id = Column(String, ForeignKey('users.id'))
     parent_resub_id = Column(String, ForeignKey('resubs.id'))
     parent_post_id = Column(String, ForeignKey('posts.id'))
-    parent_comment_id = Column(Integer, ForeignKey('comment.id'), nullable=True)
+    parent_comment_id = Column(Integer, ForeignKey('comments.id'), nullable=True)
 
     author = relationship('User', back_populates='comments')
     parent_resub = relationship('Resub', back_populates='comments')
