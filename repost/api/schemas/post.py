@@ -13,7 +13,7 @@ class Post(BaseModel):
     title: str
     url: Optional[str]
     content: Optional[str]
-    author_name: str
+    author_username: str = Field(..., description='Username of the author of the post')
     created: datetime
     edited: Optional[datetime]
     votes: int

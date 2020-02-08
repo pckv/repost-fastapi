@@ -13,7 +13,7 @@ class Comment(BaseModel):
     parent_post_id: int = Field(..., description='ID of the parent post the comment was created in')
     parent_comment_id: Optional[int] = Field(..., description='ID of the parent comment when the comment is a reply')
     content: str
-    author_name: str
+    author_username: str = Field(..., description='Username of the author of the comment')
     created: datetime
     edited: Optional[datetime]
     votes: int

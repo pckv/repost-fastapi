@@ -12,7 +12,7 @@ class Resub(BaseModel):
     """
     name: str
     description: Optional[str]
-    owner_name: str
+    owner_username: str = Field(..., description='Username of the owner of the resub')
 
 
 class CreateResub(BaseModel):
