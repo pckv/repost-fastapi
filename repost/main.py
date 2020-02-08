@@ -8,11 +8,14 @@ __version__ = '0.0.1'
 
 from fastapi import FastAPI
 
+from repost import models, config
 from repost.api import api_router
-from repost import config
+from repost.database import engine
 
 config.initialize()
 
 app = FastAPI(title='Repost', version=__version__, description=__doc__,
               docs_url='/api/swagger', redoc_url='/api/docs')
 app.include_router(api_router, prefix='/api')
+
+models.Base.metadata.create_all(bind=engine)

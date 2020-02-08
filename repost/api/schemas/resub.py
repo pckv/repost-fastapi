@@ -1,4 +1,5 @@
 """API schemas for resubs."""
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -12,8 +13,8 @@ class Resub(BaseModel):
     posts.
     """
     name: str
-    description: str
-    owner: User
+    description: Optional[str]
+    owner_id: int
 
 
 class CreateResub(BaseModel):
