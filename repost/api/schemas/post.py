@@ -1,12 +1,9 @@
 """API schemas for posts."""
 
-
 from datetime import datetime
 from typing import Optional
 
 from pydantic import Field, BaseModel
-
-from .user import User
 
 
 class Post(BaseModel):
@@ -16,7 +13,7 @@ class Post(BaseModel):
     title: str
     url: Optional[str]
     content: Optional[str]
-    author: str
+    author_name: str
     created: datetime
     edited: Optional[datetime]
     votes: int

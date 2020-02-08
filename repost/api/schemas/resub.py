@@ -3,8 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .user import User
-
 
 class Resub(BaseModel):
     """Schema for a resub
@@ -14,7 +12,7 @@ class Resub(BaseModel):
     """
     name: str
     description: Optional[str]
-    owner_id: int
+    owner_name: str
 
 
 class CreateResub(BaseModel):
