@@ -17,7 +17,7 @@ router = APIRouter()
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse}})
 async def create_user(user: CreateUser, db: Session = Depends(get_db)):
     """Create a new user."""
-    return crud.create_user(db, user=user)
+    return crud.create_user(db, username=user.username, password=user.password)
 
 
 @router.get('/me', response_model=User,
@@ -32,7 +32,7 @@ async def get_current_user(current_user: User = Depends(resolve_current_user)):
 async def edit_current_user(*, current_user: User = Depends(get_current_user), edited_user: EditUser,
                             db: Session = Depends(get_db)):
     """Edit the currently authorized user."""
-    return crud.update_user(db, username=current_user.username, user=edited_user)
+    return crud.update_user(db, username=current_user.username, **edited_user.dict(exclude_unset=True))
 
 
 @router.delete('/me',
