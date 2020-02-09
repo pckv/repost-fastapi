@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post('/', response_model=User, status_code=HTTP_201_CREATED,
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse}})
-async def create_user(*, db: Session = Depends(get_db), user: CreateUser):
+async def create_user(user: CreateUser, db: Session = Depends(get_db)):
     """Create a new user."""
     return crud.create_user(db, user=user)
 
@@ -29,16 +29,17 @@ async def get_current_user(current_user: User = Depends(resolve_current_user)):
 
 @router.patch('/me', response_model=User,
               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse}})
-async def edit_current_user(*, current_user: User = Depends(get_current_user), edited_user: EditUser):
+async def edit_current_user(*, current_user: User = Depends(get_current_user), edited_user: EditUser,
+                            db: Session = Depends(get_db)):
     """Edit the currently authorized user."""
-    pass
+    return crud.update_user(db, username=current_user.username, user=edited_user)
 
 
 @router.delete('/me',
                responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse}})
-async def delete_current_user(current_user: User = Depends(get_current_user)):
+async def delete_current_user(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Delete the currently authorized user."""
-    pass
+    crud.delete_user(db, username=current_user.username)
 
 
 @router.get('/{username}', response_model=User,

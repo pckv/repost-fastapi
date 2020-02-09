@@ -20,7 +20,7 @@ def get_db():
         session.close()
 
 
-def resolve_user(db: Session = Depends(get_db), username: str = Path(...)) -> User:
+def resolve_user(username: str = Path(...), db: Session = Depends(get_db)) -> User:
     """Verify the user from path parameter.
 
     Base path: /users/{username}
@@ -32,9 +32,9 @@ def resolve_user(db: Session = Depends(get_db), username: str = Path(...)) -> Us
     return User.from_orm(db_user)
 
 
-async def resolve_current_user(db: Session = Depends(get_db), username: str = Depends(authorize_user)) -> User:
+async def resolve_current_user(username: str = Depends(authorize_user), db: Session = Depends(get_db)) -> User:
     """Resolve the currently authorized User."""
-    return resolve_user(db, username)
+    return resolve_user(username, db)
 
 
 async def resolve_resub(resub: str = Path(...)) -> Resub:
