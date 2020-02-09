@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from repost.api.schemas import SetOwnerUsername
+
 
 class Resub(BaseModel):
     """Schema for a resub
@@ -13,6 +15,10 @@ class Resub(BaseModel):
     name: str
     description: Optional[str]
     owner_username: str = Field(..., description='Username of the owner of the resub')
+
+    class Config:
+        orm_mode = True
+        getter_dict = SetOwnerUsername
 
 
 class CreateResub(BaseModel):

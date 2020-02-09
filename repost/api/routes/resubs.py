@@ -10,9 +10,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from repost import crud
+from repost import crud, models
 from repost.api.resolvers import resolve_resub, resolve_user_owned_resub, resolve_current_user, get_db
-from repost.api.schemas import User, Resub, CreateResub, EditResub, ErrorResponse
+from repost.api.schemas import Resub, CreateResub, EditResub, ErrorResponse
 
 router = APIRouter()
 
@@ -26,16 +26,17 @@ async def get_resubs(db: Session = Depends(get_db)):
 @router.post('/', response_model=Resub,
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                         HTTP_403_FORBIDDEN: {'model': ErrorResponse}})
-async def create_resub(resub: CreateResub, current_user: User = Depends(resolve_current_user),
+async def create_resub(resub: CreateResub, current_user: models.User = Depends(resolve_current_user),
                        db: Session = Depends(get_db)):
     """Create a new resub."""
-    db_owner = crud.get_user(db, username=current_user.username)
-    return crud.create_resub(db, owner_id=db_owner.id, name=resub.name, description=resub.description)
+    resub = crud.create_resub(db, owner_id=current_user.id, name=resub.name, description=resub.description)
+
+    return resub
 
 
 @router.get('/{resub}', response_model=Resub,
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_resub(resub: Resub = Depends(resolve_resub)):
+async def get_resub(resub: models.Resub = Depends(resolve_resub)):
     """Get a specific resub."""
     return resub
 
@@ -43,7 +44,7 @@ async def get_resub(resub: Resub = Depends(resolve_resub)):
 @router.delete('/{resub}',
                responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def delete_resub(resub: Resub = Depends(resolve_user_owned_resub)):
+async def delete_resub(resub: models.Resub = Depends(resolve_user_owned_resub)):
     """Delete a resub.
 
     Only the owner of a resub can delete the resub.
@@ -54,7 +55,7 @@ async def delete_resub(resub: Resub = Depends(resolve_user_owned_resub)):
 @router.patch('/{resub}', response_model=Resub,
               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def edit_resub(*, resub: Resub = Depends(resolve_user_owned_resub), edited_resub: EditResub):
+async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub), edited_resub: EditResub):
     """Edit a resub.
 
     Only the owner of a resub can delete the resub.

@@ -46,7 +46,7 @@ async def resolve_resub(resub: str = Path(...), db: Session = Depends(get_db)) -
     if not db_resub:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Resub \'{resub}\' not found')
 
-    return Resub.from_orm(db_resub)
+    return db_resub
 
 
 async def resolve_user_owned_resub(resub: models.Resub = Depends(resolve_resub),
