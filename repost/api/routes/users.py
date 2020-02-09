@@ -5,6 +5,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 
+from repost.api.resolvers import resolve_user
 from repost.api.schemas import User, CreateUser, Resub, Post, Comment, ErrorResponse, EditUser
 from repost.api.security import get_current_user
 
@@ -41,27 +42,27 @@ async def delete_current_user(current_user: User = Depends(get_current_user)):
 
 @router.get('/{username}', response_model=User,
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_user(username: str):
+async def get_user(user: User = Depends(resolve_user)):
     """Get a specific user."""
-    pass
+    return user
 
 
 @router.get('/{username}/resubs', response_model=List[Resub],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_resubs_owned_by_user(username: str):
+async def get_resubs_owned_by_user(user: User = Depends(resolve_user)):
     """Get all resubs owned by a specific user."""
     pass
 
 
 @router.get('/{username}/posts', response_model=List[Post],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_posts_by_user(username: str):
+async def get_posts_by_user(user: User = Depends(resolve_user)):
     """Get all posts by a specific user."""
     pass
 
 
 @router.get('/{username}/comments', response_model=List[Comment],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_comments_by_user(username: str):
+async def get_comments_by_user(user: User = Depends(resolve_user)):
     """Get all comments by a specific user."""
     pass

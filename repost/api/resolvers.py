@@ -1,9 +1,34 @@
 """Dependencies for resolving and verifying paths and ownership."""
 
-from fastapi import Path, Depends
+from fastapi import Path, Depends, HTTPException
+from starlette.status import HTTP_404_NOT_FOUND
 
+from repost import crud
 from repost.api.schemas import Resub, User, Post, Comment
 from repost.api.security import get_current_user
+from repost.database import SessionLocal
+
+
+def get_db():
+    """Dependency for database connections."""
+    session = SessionLocal()
+
+    try:
+        yield session
+    finally:
+        session.close()
+
+
+def resolve_user(db: Depends(get_db), username: str = Path(...)) -> User:
+    """Verify the user from path parameter.
+
+    Base path: /users/{username}
+    """
+    db_user = crud.get_user(db, username=username)
+    if not db_user:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'User \'{username}\' not found')
+
+    return User.from_orm(db_user)
 
 
 async def resolve_resub(resub: str = Path(...)) -> Resub:
