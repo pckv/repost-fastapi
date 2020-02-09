@@ -1,5 +1,5 @@
 """API schemas for users."""
-
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -10,6 +10,10 @@ class User(BaseModel):
     username: str
     bio: str
     avatar_url: Optional[str]
+    created: datetime
+
+    class Config:
+        orm_mode = True
 
 
 class CreateUser(BaseModel):
