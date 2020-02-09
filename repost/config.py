@@ -13,6 +13,7 @@ class Config:
     """Definition and defaults for package configuration."""
     jwt_secret: str = secrets.token_hex(32)
     jwt_algorithm: str = 'HS256'
+    database_url: str = 'sqlite:///./repost.db'
 
     def initialize(self):
         """Initialize and load the config instance."""
