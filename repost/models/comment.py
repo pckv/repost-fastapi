@@ -12,9 +12,9 @@ class Comment(Base):
     created = Column(DateTime)
     edited = Column(DateTime, nullable=True)
 
-    author_id = Column(String, ForeignKey('users.id'))
-    parent_resub_id = Column(String, ForeignKey('resubs.id'))
-    parent_post_id = Column(String, ForeignKey('posts.id'))
+    author_id = Column(Integer, ForeignKey('users.id'))
+    parent_resub_id = Column(Integer, ForeignKey('resubs.id'))
+    parent_post_id = Column(Integer, ForeignKey('posts.id'))
     parent_comment_id = Column(Integer, ForeignKey('comments.id'), nullable=True)
 
     author = relationship('User', back_populates='comments')

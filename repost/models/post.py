@@ -14,8 +14,8 @@ class Post(Base):
     created = Column(DateTime)
     edited = Column(DateTime, nullable=True)
 
-    author_id = Column(String, ForeignKey('users.id'))
-    parent_resub_id = Column(String, ForeignKey('resubs.id'))
+    author_id = Column(Integer, ForeignKey('users.id'))
+    parent_resub_id = Column(Integer, ForeignKey('resubs.id'))
 
     author = relationship('User', back_populates='posts')
     parent_resub = relationship('Resub', back_populates='posts')
