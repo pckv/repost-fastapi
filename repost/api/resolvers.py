@@ -1,6 +1,7 @@
 """Dependencies for resolving and verifying paths and ownership."""
 
 from fastapi import Path, Depends, HTTPException
+from sqlalchemy.orm import Session
 from starlette.status import HTTP_404_NOT_FOUND
 
 from repost import crud
@@ -19,7 +20,7 @@ def get_db():
         session.close()
 
 
-def resolve_user(db: Depends(get_db), username: str = Path(...)) -> User:
+def resolve_user(db: Session = Depends(get_db), username: str = Path(...)) -> User:
     """Verify the user from path parameter.
 
     Base path: /users/{username}

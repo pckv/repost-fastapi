@@ -3,9 +3,11 @@
 from typing import List
 
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 
-from repost.api.resolvers import resolve_user
+from repost import crud
+from repost.api.resolvers import resolve_user, get_db
 from repost.api.schemas import User, CreateUser, Resub, Post, Comment, ErrorResponse, EditUser
 from repost.api.security import get_current_user
 
@@ -14,9 +16,9 @@ router = APIRouter()
 
 @router.post('/', response_model=User, status_code=HTTP_201_CREATED,
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse}})
-async def create_user(user: CreateUser):
+async def create_user(*, db: Session = Depends(get_db), user: CreateUser):
     """Create a new user."""
-    pass
+    return crud.create_user(db, user=user)
 
 
 @router.get('/me', response_model=User,
