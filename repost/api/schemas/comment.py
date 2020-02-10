@@ -5,6 +5,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from repost.api.schemas import bind_orm_fields
+
 
 class Comment(BaseModel):
     """Schema for a comment in a post"""
@@ -16,7 +18,11 @@ class Comment(BaseModel):
     author_username: str = Field(..., description='Username of the author of the comment')
     created: datetime
     edited: Optional[datetime]
-    votes: int
+    votes: int = 0
+
+    class Config:
+        orm_mode = True
+        getter_dict = bind_orm_fields(author_username='author.username', parent_resub_name='parent_resub.name')
 
 
 class CreateComment(BaseModel):
