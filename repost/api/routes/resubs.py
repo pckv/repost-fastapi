@@ -9,9 +9,8 @@ from typing import List
 from fastapi import APIRouter, Depends
 from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from repost.api.resolvers import resolve_resub, resolve_user_owned_resub
+from repost.api.resolvers import resolve_resub, resolve_user_owned_resub, resolve_current_user
 from repost.api.schemas import User, Resub, CreateResub, EditResub, ErrorResponse
-from repost.api.security import get_current_user
 
 router = APIRouter()
 
@@ -25,7 +24,7 @@ async def get_resubs():
 @router.post('/', response_model=Resub,
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                         HTTP_403_FORBIDDEN: {'model': ErrorResponse}})
-async def create_resub(resub: CreateResub, current_user: User = Depends(get_current_user)):
+async def create_resub(resub: CreateResub, current_user: User = Depends(resolve_current_user)):
     """Create a new resub."""
     pass
 
