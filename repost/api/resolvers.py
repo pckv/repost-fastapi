@@ -94,7 +94,7 @@ async def resolve_post_for_post_owner_or_resub_owner(resub: models.Resub = Depen
 
     Base path: /resubs/{resub}/posts/{post_id}
     """
-    if (resub.owner_id != current_user.id) and post.author_id != current_user.id:
+    if (resub.owner_id != current_user.id) and (post.author_id != current_user.id):
         raise HTTPException(status_code=HTTP_403_FORBIDDEN,
                             detail='You are not the author of this post or the owner of this resub')
 
@@ -102,15 +102,22 @@ async def resolve_post_for_post_owner_or_resub_owner(resub: models.Resub = Depen
 
 
 async def resolve_comment(post: models.Post = Depends(resolve_post),
-                          comment_id: int = Path(...)) -> models.Comment:
+                          comment_id: int = Path(...), db: Session = Depends(get_db)) -> models.Comment:
     """ Resolve the comment from the path parameter. """
-    pass
+    db_comment = crud.get_comment(db, comment_id=comment_id)
+    if not db_comment:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'Comment \'{comment_id}\' not found')
+
+    return db_comment
 
 
-async def resolve_user_owned_comment(post: models.Comment = Depends(resolve_comment),
-                                     current_user: models.User = Depends(resolve_current_user)) -> models.Post:
+async def resolve_user_owned_comment(comment: models.Comment = Depends(resolve_comment),
+                                     current_user: models.User = Depends(resolve_current_user)) -> models.Comment:
     """ Verify that the authorized user owns the comment before returning. """
-    pass
+    if comment.author_id != current_user.id:
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='You are not the author of this comment')
+
+    return comment
 
 
 async def resolve_comment_for_comment_owner_or_resub_owner(resub: models.Resub = Depends(resolve_resub),
@@ -118,4 +125,8 @@ async def resolve_comment_for_comment_owner_or_resub_owner(resub: models.Resub =
                                                            current_user: models.User = Depends(
                                                                resolve_current_user)) -> models.Comment:
     """ Verify that the authorized user owns the comment or owns the resub before returning. """
-    pass
+    if (comment.author_id != current_user.id) and (resub.owner_id != current_user.id):
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN,
+                            detail='You are not the author of this comment or the owner of this resub')
+
+    return comment
