@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from repost.api.schemas import SetOwnerUsername
+from repost.api.schemas import bind_orm_fields
 
 
 class Resub(BaseModel):
@@ -18,7 +18,7 @@ class Resub(BaseModel):
 
     class Config:
         orm_mode = True
-        getter_dict = SetOwnerUsername
+        getter_dict = bind_orm_fields(owner_username='owner.username')
 
 
 class CreateResub(BaseModel):
