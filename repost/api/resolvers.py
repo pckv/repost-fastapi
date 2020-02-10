@@ -61,7 +61,8 @@ async def resolve_user_owned_resub(resub: models.Resub = Depends(resolve_resub),
     return resub
 
 
-async def resolve_post(resub: models.Resub = Depends(resolve_resub), post_id: int = Path(...), db: Session = Depends(get_db)) -> models.Post:
+async def resolve_post(resub: models.Resub = Depends(resolve_resub), post_id: int = Path(...),
+                       db: Session = Depends(get_db)) -> models.Post:
     """Resolve the post from the path parameter.
 
     Base path: /resubs/{resub}/posts/{post_id}
