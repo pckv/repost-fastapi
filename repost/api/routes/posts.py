@@ -41,7 +41,7 @@ async def create_post(*, resub: models.Resub = Depends(resolve_resub),
 
 @router.get('/{post_id}', response_model=Post,
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_post(resub: models.Resub = Depends(resolve_resub), post: models.Post = Depends(resolve_post)):
+async def get_post(post: models.Post = Depends(resolve_post)):
     """Get a specific post in a resub."""
     return post
 
@@ -49,8 +49,7 @@ async def get_post(resub: models.Resub = Depends(resolve_resub), post: models.Po
 @router.delete('/{post_id}',
                responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def delete_post(resub: models.Resub = Depends(resolve_resub),
-                      post: models.Post = Depends(resolve_post_for_post_owner_or_resub_owner),
+async def delete_post(post: models.Post = Depends(resolve_post_for_post_owner_or_resub_owner),
                       db: Session = Depends(get_db)):
     """Delete a post in a resub.
 
@@ -63,8 +62,7 @@ async def delete_post(resub: models.Resub = Depends(resolve_resub),
 @router.patch('/{post_id}', response_model=Post,
               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def edit_post(*, resub: models.Resub = Depends(resolve_resub),
-                    post: models.Post = Depends(resolve_user_owned_post), edited_post: EditPost,
+async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edited_post: EditPost,
                     db: Session = Depends(get_db)):
     """Edit a post in a resub.
 
@@ -77,8 +75,7 @@ async def edit_post(*, resub: models.Resub = Depends(resolve_resub),
 @router.patch('/{post_id}/{vote}',
               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def vote_post(*, resub: models.Resub = Depends(resolve_resub),
-                    post: models.Post = Depends(resolve_post), vote: Vote,
+async def vote_post(*, post: models.Post = Depends(resolve_post), vote: Vote,
                     current_user: models.User = Depends(resolve_current_user)):
     """Vote on a post in a resub."""
     pass
