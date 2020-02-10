@@ -67,9 +67,7 @@ async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edi
     """Edit a post in a resub.
 
     Only the author of a post can edit the post."""
-    updated = edited_post.dict(exclude_unset=True)
-
-    return crud.update_post(db, post_id=post.id, **updated)
+    return crud.update_post(db, post_id=post.id, **edited_post.dict(exclude_unset=True))
 
 
 @router.patch('/{post_id}/{vote}',

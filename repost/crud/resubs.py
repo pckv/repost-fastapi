@@ -25,7 +25,7 @@ def create_resub(db: Session, *, owner_id: int, name: str, description: str) -> 
     return db_resub
 
 
-def update_resub(db: Session, *, name: str, **columns: Any):
+def update_resub(db: Session, *, name: str, **columns: Any) -> Resub:
     """Update the resub with the given name.
 
     Enter any `repost.models.Resub` column to update in `**columns`.

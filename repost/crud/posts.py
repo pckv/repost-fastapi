@@ -26,7 +26,7 @@ def create_post(db: Session, *, author_id: int, parent_resub_id: int, title: str
     return db_post
 
 
-def update_post(db: Session, *, post_id: int, **columns: Any):
+def update_post(db: Session, *, post_id: int, **columns: Any) -> Post:
     """Update the post with the given ID.
 
     Enter any `repost.models.Post` column to update in `**columns`.
