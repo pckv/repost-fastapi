@@ -2,7 +2,7 @@
 
 from fastapi import Path, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 
 from repost import crud
 from repost import models
@@ -37,12 +37,16 @@ async def resolve_current_user(username: str = Depends(authorize_user), db: Sess
     return resolve_user(username, db)
 
 
-async def resolve_resub(resub: str = Path(...)) -> models.Resub:
+async def resolve_resub(resub: str = Path(...), db: Session = Depends(get_db)) -> models.Resub:
     """Verify the resub from path parameter.
 
     Base path: /resubs/{resub}
     """
-    pass
+    db_resub = crud.get_resub(db, name=resub)
+    if not db_resub:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Resub \'{resub}\' not found')
+
+    return db_resub
 
 
 async def resolve_user_owned_resub(resub: models.Resub = Depends(resolve_resub),
@@ -51,7 +55,10 @@ async def resolve_user_owned_resub(resub: models.Resub = Depends(resolve_resub),
 
     Base path: /resubs/{resub}
     """
-    pass
+    if resub.owner != current_user:
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='You are not the owner of this resub')
+
+    return resub
 
 
 async def resolve_post(resub: models.Resub = Depends(resolve_resub),
