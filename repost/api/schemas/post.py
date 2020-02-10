@@ -18,6 +18,7 @@ class Post(BaseModel):
     author_username: str = Field(..., description='Username of the author of the post')
     created: datetime
     edited: Optional[datetime]
+    votes: int = 0
 
     class Config:
         orm_mode = True
