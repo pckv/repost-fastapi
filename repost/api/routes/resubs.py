@@ -42,7 +42,8 @@ async def get_resub(resub: models.Resub = Depends(resolve_resub)):
 
 
 @router.delete('/{resub}',
-               responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                           HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def delete_resub(resub: models.Resub = Depends(resolve_user_owned_resub), db: Session = Depends(get_db)):
@@ -54,7 +55,8 @@ async def delete_resub(resub: models.Resub = Depends(resolve_user_owned_resub), 
 
 
 @router.patch('/{resub}', response_model=Resub,
-              responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub), edited_resub: EditResub,

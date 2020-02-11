@@ -21,14 +21,16 @@ async def create_user(user: CreateUser, db: Session = Depends(get_db)):
 
 
 @router.get('/me', response_model=User,
-            responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
+            responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                       HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
 async def get_current_user(current_user: models.User = Depends(resolve_current_user)):
     """Get the currently authorized user."""
     return current_user
 
 
 @router.patch('/me', response_model=User,
-              responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
+              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
 async def edit_current_user(*, current_user: models.User = Depends(get_current_user), edited_user: EditUser,
                             db: Session = Depends(get_db)):
     """Edit the currently authorized user."""
@@ -36,7 +38,8 @@ async def edit_current_user(*, current_user: models.User = Depends(get_current_u
 
 
 @router.delete('/me',
-               responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
+               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
 async def delete_current_user(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Delete the currently authorized user."""
     crud.delete_user(db, username=current_user.username)
