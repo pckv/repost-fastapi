@@ -9,7 +9,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
+from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 
 from repost import crud, models
 from repost.api.resolvers import resolve_resub, resolve_post, resolve_user_owned_post, \
@@ -27,7 +27,8 @@ async def get_posts(resub: models.Resub = Depends(resolve_resub), db: Session = 
 
 
 @router.post('/', response_model=Post,
-             responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def create_post(*, resub: models.Resub = Depends(resolve_resub),
                       post: CreatePost, current_user: models.User = Depends(resolve_current_user),
@@ -47,7 +48,9 @@ async def get_post(post: models.Post = Depends(resolve_post)):
 
 
 @router.delete('/{post_id}',
-               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                          HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def delete_post(post: models.Post = Depends(resolve_post_for_post_owner_or_resub_owner),
                       db: Session = Depends(get_db)):
@@ -60,7 +63,9 @@ async def delete_post(post: models.Post = Depends(resolve_post_for_post_owner_or
 
 
 @router.patch('/{post_id}', response_model=Post,
-              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                         HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edited_post: EditPost,
                     db: Session = Depends(get_db)):
@@ -71,7 +76,8 @@ async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edi
 
 
 @router.patch('/{post_id}/{vote}',
-              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def vote_post(*, post: models.Post = Depends(resolve_post), vote: Vote,
                     current_user: models.User = Depends(resolve_current_user)):
