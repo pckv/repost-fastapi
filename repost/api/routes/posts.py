@@ -73,7 +73,7 @@ async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edi
 
 
 @router.patch('/{post_id}/{vote}',
-              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+              responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def vote_post(*, post: models.Post = Depends(resolve_post), vote: Vote,
                     current_user: models.User = Depends(resolve_current_user)):

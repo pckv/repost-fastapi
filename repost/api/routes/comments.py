@@ -65,18 +65,9 @@ async def edit_comment(*, comment: models.Comment = Depends(resolve_user_owned_c
 
 
 @router.patch('/{comment_id}/{vote}',
-              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+              responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def vote_comment(*, comment: models.Comment = Depends(resolve_comment), vote: Vote,
                        current_user: models.User = Depends(resolve_current_user)):
     """Vote on a comment in a post."""
-    pass
-
-
-@router.post('/{comment_id}/', response_model=Comment,
-             responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
-                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def create_reply(*, comment: models.Comment = Depends(resolve_comment), reply: CreateComment,
-                       current_user: models.User = Depends(resolve_current_user)):
-    """Create a reply to a comment in a post."""
     pass
