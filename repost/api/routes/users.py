@@ -54,20 +54,20 @@ async def get_user(user: models.User = Depends(resolve_user)):
 
 @router.get('/{username}/resubs', response_model=List[Resub],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_resubs_owned_by_user(user: models.User = Depends(resolve_user)):
+async def get_resubs_owned_by_user(user: models.User = Depends(resolve_user), db: Session = Depends(get_db)):
     """Get all resubs owned by a specific user."""
-    pass
+    return crud.get_resubs_by_user(db, user_id=user.id)
 
 
 @router.get('/{username}/posts', response_model=List[Post],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_posts_by_user(user: models.User = Depends(resolve_user)):
+async def get_posts_by_user(user: models.User = Depends(resolve_user), db: Session = Depends(get_db)):
     """Get all posts by a specific user."""
-    pass
+    return crud.get_posts_by_user(db, user_id=user.id)
 
 
 @router.get('/{username}/comments', response_model=List[Comment],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_comments_by_user(user: models.User = Depends(resolve_user)):
+async def get_comments_by_user(user: models.User = Depends(resolve_user), db: Session = Depends(get_db)):
     """Get all comments by a specific user."""
-    pass
+    return crud.get_comments_by_user(db, user_id=user.id)
