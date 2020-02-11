@@ -2,7 +2,7 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
@@ -17,6 +17,10 @@ router = APIRouter()
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse}})
 async def create_user(user: CreateUser, db: Session = Depends(get_db)):
     """Create a new user."""
+    db_user = crud.get_user(db, username=user.username)
+    if db_user:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f'User \'{user.username}\' already exists')
+
     return crud.create_user(db, username=user.username, password=user.password)
 
 

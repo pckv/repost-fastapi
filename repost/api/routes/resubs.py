@@ -6,7 +6,7 @@ posts.
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
@@ -29,9 +29,11 @@ async def get_resubs(db: Session = Depends(get_db)):
 async def create_resub(resub: CreateResub, current_user: models.User = Depends(resolve_current_user),
                        db: Session = Depends(get_db)):
     """Create a new resub."""
-    resub = crud.create_resub(db, owner_id=current_user.id, name=resub.name, description=resub.description)
+    db_resub = crud.get_resub(db, name=resub.name)
+    if db_resub:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f'Resub \'{resub.name}\' already exists')
 
-    return resub
+    return crud.create_resub(db, owner_id=current_user.id, name=resub.name, description=resub.description)
 
 
 @router.get('/{resub}', response_model=Resub,
