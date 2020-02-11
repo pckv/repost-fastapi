@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func
 from sqlalchemy.orm import relationship
 
 from . import Base
@@ -9,8 +9,8 @@ class Comment(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String)
-    created = Column(DateTime)
-    edited = Column(DateTime, nullable=True)
+    created = Column(DateTime(timezone=True), server_default=func.now())
+    edited = Column(DateTime(timezone=True), onupdate=func.now())
 
     author_id = Column(Integer, ForeignKey('users.id'))
     parent_resub_id = Column(Integer, ForeignKey('resubs.id'))

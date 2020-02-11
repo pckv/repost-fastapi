@@ -11,6 +11,7 @@ class User(BaseModel):
     bio: Optional[str]
     avatar_url: Optional[str]
     created: datetime
+    edited: Optional[datetime]
 
     class Config:
         orm_mode = True

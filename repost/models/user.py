@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import relationship
 
 from . import Base
@@ -13,7 +11,8 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     bio = Column(String)
     avatar_url = Column(String, nullable=True)
-    created = Column(DateTime, default=datetime.utcnow)
+    created = Column(DateTime(timezone=True), server_default=func.now())
+    edited = Column(DateTime(timezone=True), onupdate=func.now())
 
     hashed_password = Column(String)
 

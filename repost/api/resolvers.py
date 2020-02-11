@@ -44,7 +44,7 @@ async def resolve_resub(resub: str = Path(...), db: Session = Depends(get_db)) -
     """
     db_resub = crud.get_resub(db, name=resub)
     if not db_resub:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Resub \'{resub}\' not found')
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'Resub \'{resub}\' not found')
 
     return db_resub
 
@@ -61,13 +61,17 @@ async def resolve_user_owned_resub(resub: models.Resub = Depends(resolve_resub),
     return resub
 
 
-async def resolve_post(resub: models.Resub = Depends(resolve_resub),
-                       post_id: int = Path(...)) -> models.Post:
+async def resolve_post(resub: models.Resub = Depends(resolve_resub), post_id: int = Path(...),
+                       db: Session = Depends(get_db)) -> models.Post:
     """Resolve the post from the path parameter.
 
     Base path: /resubs/{resub}/posts/{post_id}
     """
-    pass
+    db_post = crud.get_post(db, post_id=post_id)
+    if not db_post:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'Post \'{post_id}\' not found')
+
+    return db_post
 
 
 async def resolve_user_owned_post(post: models.Post = Depends(resolve_post),
@@ -76,7 +80,10 @@ async def resolve_user_owned_post(post: models.Post = Depends(resolve_post),
 
     Base path: /resubs/{resub}/posts/{post_id}
     """
-    pass
+    if post.author_id != current_user.id:
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='You are not the author of this post')
+
+    return post
 
 
 async def resolve_post_for_post_owner_or_resub_owner(resub: models.Resub = Depends(resolve_resub),
@@ -87,7 +94,11 @@ async def resolve_post_for_post_owner_or_resub_owner(resub: models.Resub = Depen
 
     Base path: /resubs/{resub}/posts/{post_id}
     """
-    pass
+    if (resub.owner_id != current_user.id) and post.author_id != current_user.id:
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN,
+                            detail='You are not the author of this post or the owner of this resub')
+
+    return post
 
 
 async def resolve_comment(post: models.Post = Depends(resolve_post),

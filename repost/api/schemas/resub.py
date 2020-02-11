@@ -1,4 +1,5 @@
 """API schemas for resubs."""
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -15,6 +16,9 @@ class Resub(BaseModel):
     name: str
     description: Optional[str]
     owner_username: str = Field(..., description='Username of the owner of the resub')
+
+    created: datetime
+    edited: Optional[datetime]
 
     class Config:
         orm_mode = True
