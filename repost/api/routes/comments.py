@@ -9,7 +9,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED
 
 from repost import models, crud
 from repost.api.resolvers import resolve_post, resolve_comment_for_comment_owner_or_resub_owner, resolve_comment, \
@@ -27,7 +27,7 @@ async def get_comments(post: models.Post = Depends(resolve_post), db: Session = 
 
 
 @router.post('/', response_model=Comment,
-             responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+             responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def create_comment(*, post: models.Post = Depends(resolve_post), comment: CreateComment,
                          parent_comment_id: int = None, current_user: models.User = Depends(resolve_current_user),
@@ -38,7 +38,8 @@ async def create_comment(*, post: models.Post = Depends(resolve_post), comment: 
 
 
 @router.delete('/{comment_id}',
-               responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+               responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                          HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                           HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def delete_comment(comment: models.Comment = Depends(resolve_comment_for_comment_owner_or_resub_owner),
                          db: Session = Depends(get_db)):
@@ -51,7 +52,8 @@ async def delete_comment(comment: models.Comment = Depends(resolve_comment_for_c
 
 
 @router.patch('/{comment_id}', response_model=Comment,
-              responses={HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+              responses={HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                         HTTP_403_FORBIDDEN: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def edit_comment(*, comment: models.Comment = Depends(resolve_user_owned_comment), edited_comment: EditComment,
                        db: Session = Depends(get_db)):
