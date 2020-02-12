@@ -9,7 +9,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST, \
+    HTTP_201_CREATED
 
 from repost import crud, models
 from repost.api.resolvers import resolve_resub, resolve_post, resolve_user_owned_post, \
@@ -26,7 +27,7 @@ async def get_posts(resub: models.Resub = Depends(resolve_resub), db: Session = 
     return crud.get_posts(db, parent_resub_id=resub.id)
 
 
-@router.post('/', response_model=Post,
+@router.post('/', response_model=Post, status_code=HTTP_201_CREATED,
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})

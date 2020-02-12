@@ -9,7 +9,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST, \
+    HTTP_201_CREATED
 
 from repost import models, crud
 from repost.api.resolvers import resolve_post, resolve_comment_for_comment_owner_or_resub_owner, resolve_comment, \
@@ -26,7 +27,7 @@ async def get_comments(post: models.Post = Depends(resolve_post), db: Session = 
     return crud.get_comments(db, post.id)
 
 
-@router.post('/', response_model=Comment,
+@router.post('/', response_model=Comment, status_code=HTTP_201_CREATED,
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})

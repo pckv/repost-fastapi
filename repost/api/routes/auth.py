@@ -19,7 +19,6 @@ router = APIRouter()
 async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     """Authorize using username and password."""
     db_user = crud.get_user(db, username=form_data.username)
-
     if not db_user or not verify_password(form_data.password, db_user.hashed_password):
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail='Invalid login information')
 
