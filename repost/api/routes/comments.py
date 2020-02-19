@@ -31,12 +31,23 @@ async def get_comments(post: models.Post = Depends(resolve_post), db: Session = 
              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def create_comment(*, post: models.Post = Depends(resolve_post), comment: CreateComment,
-                         parent_comment_id: int = None, current_user: models.User = Depends(resolve_current_user),
-                         db: Session = Depends(get_db)):
+async def create_comment(*, post: models.Post = Depends(resolve_post), created_comment: CreateComment,
+                         current_user: models.User = Depends(resolve_current_user), db: Session = Depends(get_db)):
     """Create a comment in a post."""
     return crud.create_comment(db, author_id=current_user.id, parent_resub_id=post.parent_resub_id,
-                               parent_post_id=post.id, parent_comment_id=parent_comment_id, content=comment.content)
+                               parent_post_id=post.id, parent_comment_id=None, content=created_comment.content)
+
+
+@router.post('/{comment_id}', response_model=Comment, status_code=HTTP_201_CREATED,
+             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def create_reply(*, comment: models.Comment = Depends(resolve_comment), created_comment: CreateComment,
+                       current_user: models.User = Depends(resolve_current_user), db: Session = Depends(get_db)):
+    """Create a reply to a comment in a post."""
+    return crud.create_comment(db, author_id=current_user.id, parent_resub_id=comment.parent_resub_id,
+                               parent_post_id=comment.parent_post_id, parent_comment_id=comment.id,
+                               content=created_comment.content)
 
 
 @router.delete('/{comment_id}',
