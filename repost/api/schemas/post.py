@@ -34,6 +34,6 @@ class CreatePost(BaseModel):
 
 class EditPost(BaseModel):
     """Schema for editing a post in a resub"""
-    title: str = None
+    title: str = ''
     url: Optional[str] = None
     content: Optional[str] = None
