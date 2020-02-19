@@ -29,7 +29,8 @@ def create_comment(db: Session, *, author_id: int, parent_post_id: int, parent_r
 
 def delete_comment(db: Session, comment_id: int):
     """Delete the comment with the given ID."""
-    db.query(Comment).filter_by(id=comment_id)
+    db.query(Comment).filter_by(id=comment_id).delete()
+    db.commit()
 
 
 def update_comment(db: Session, comment_id: int, **columns: Any) -> Comment:
