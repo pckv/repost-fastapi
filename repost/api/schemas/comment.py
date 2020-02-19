@@ -32,4 +32,4 @@ class CreateComment(BaseModel):
 
 class EditComment(BaseModel):
     """Schema for editing a comment in a post"""
-    content: str = None
+    content: str
