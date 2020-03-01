@@ -2,7 +2,7 @@
 
 from fastapi import Path, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED
 
 from repost import crud
 from repost import models
@@ -34,7 +34,12 @@ def resolve_user(username: str = Path(...), db: Session = Depends(get_db)) -> mo
 
 async def resolve_current_user(username: str = Depends(authorize_user), db: Session = Depends(get_db)) -> models.User:
     """Resolve the currently authorized User."""
-    return resolve_user(username, db)
+    db_user = crud.get_user(db, username=username)
+    if not db_user:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED,
+                            detail=f'The owner of this JSON Web Token no longer exists')
+
+    return db_user
 
 
 async def resolve_resub(resub: str = Path(...), db: Session = Depends(get_db)) -> models.Resub:
