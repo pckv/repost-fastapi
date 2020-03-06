@@ -2,7 +2,7 @@ from typing import Optional, Any, List
 
 from sqlalchemy.orm import Session
 
-from repost.models import Post
+from repost.models import Post, PostVote
 
 
 def get_posts(db: Session, *, parent_resub_id: int) -> List[Post]:
@@ -40,4 +40,12 @@ def update_post(db: Session, *, post_id: int, **columns: Any) -> Post:
 def delete_post(db: Session, *, post_id: int):
     """Delete the post with the given ID."""
     db.query(Post).filter_by(id=post_id).delete()
+    db.commit()
+
+
+def vote_post(db: Session, *, post_id: int, author_id: int, vote: int):
+    """Update a user's vote on a post."""
+    db_vote = PostVote(post_id=post_id, author_id=author_id, vote=vote)
+    db.add(db_vote)
+
     db.commit()
