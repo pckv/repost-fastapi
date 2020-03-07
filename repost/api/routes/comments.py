@@ -79,7 +79,7 @@ async def edit_comment(*, comment: models.Comment = Depends(resolve_user_owned_c
     return crud.update_comment(db, comment_id=comment.id, **edited_comment.dict(exclude_unset=True))
 
 
-@router.patch('/{comment_id}/{vote}', response_model=Comment,
+@router.patch('/{comment_id}/vote/{vote}', response_model=Comment,
               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
