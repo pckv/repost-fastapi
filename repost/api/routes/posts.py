@@ -7,7 +7,7 @@ resolvers in `repost.resolvers`.
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST, \
     HTTP_201_CREATED
@@ -15,7 +15,7 @@ from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_401_UN
 from repost import crud, models
 from repost.api.resolvers import resolve_resub, resolve_post, resolve_user_owned_post, \
     resolve_post_for_post_owner_or_resub_owner, resolve_current_user, get_db
-from repost.api.schemas import ErrorResponse, CreatePost, Post, EditPost, Vote
+from repost.api.schemas import ErrorResponse, CreatePost, Post, EditPost
 
 router = APIRouter()
 
@@ -76,11 +76,11 @@ async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edi
     return crud.update_post(db, post_id=post.id, **edited_post.dict(exclude_unset=True))
 
 
-@router.patch('/{post_id}/{vote}',
+@router.patch('/{post_id}/{vote}', response_model=Post,
               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def vote_post(*, post: models.Post = Depends(resolve_post), vote: Vote,
-                    current_user: models.User = Depends(resolve_current_user)):
+async def vote_post(*, post: models.Post = Depends(resolve_post), vote: int = Path(..., ge=-1, le=1),
+                    current_user: models.User = Depends(resolve_current_user), db: Session = Depends(get_db)):
     """Vote on a post in a resub."""
-    pass
+    return crud.vote_post(db, post_id=post.id, author_id=current_user.id, vote=vote)

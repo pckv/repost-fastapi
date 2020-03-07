@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func, Table
 from sqlalchemy.orm import relationship
 
 from . import Base
@@ -20,3 +20,12 @@ class Post(Base):
     author = relationship('User', back_populates='posts')
     parent_resub = relationship('Resub', back_populates='posts')
     comments = relationship('Comment', back_populates='parent_post')
+    votes = relationship('PostVote')
+
+
+class PostVote(Base):
+    __tablename__ = 'posts_votes'
+
+    post_id = Column(Integer, ForeignKey('posts.id'), primary_key=True)
+    author_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    vote = Column(Integer)

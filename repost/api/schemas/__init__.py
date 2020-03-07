@@ -1,4 +1,4 @@
-from .generic import Vote, bind_orm_fields
+from .generic import bind_orm_fields
 from .auth import OAuth2Token
 from .comment import Comment, CreateComment, EditComment
 from .error import ErrorResponse

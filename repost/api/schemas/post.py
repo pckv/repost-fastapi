@@ -22,7 +22,8 @@ class Post(BaseModel):
 
     class Config:
         orm_mode = True
-        getter_dict = bind_orm_fields(author_username='author.username', parent_resub_name='parent_resub.name')
+        getter_dict = bind_orm_fields(author_username='author.username', parent_resub_name='parent_resub.name',
+                                      votes=lambda post: sum(v.vote for v in post.votes))
 
 
 class CreatePost(BaseModel):

@@ -7,7 +7,7 @@ This is implemented in the resolvers in `repost.resolvers`.
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST, \
     HTTP_201_CREATED
@@ -15,7 +15,7 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UN
 from repost import models, crud
 from repost.api.resolvers import resolve_post, resolve_comment_for_comment_owner_or_resub_owner, resolve_comment, \
     resolve_user_owned_comment, resolve_current_user, get_db
-from repost.api.schemas import Comment, ErrorResponse, CreateComment, EditComment, Vote
+from repost.api.schemas import Comment, ErrorResponse, CreateComment, EditComment
 
 router = APIRouter()
 
@@ -79,11 +79,11 @@ async def edit_comment(*, comment: models.Comment = Depends(resolve_user_owned_c
     return crud.update_comment(db, comment_id=comment.id, **edited_comment.dict(exclude_unset=True))
 
 
-@router.patch('/{comment_id}/{vote}',
+@router.patch('/{comment_id}/{vote}', response_model=Comment,
               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def vote_comment(*, comment: models.Comment = Depends(resolve_comment), vote: Vote,
-                       current_user: models.User = Depends(resolve_current_user)):
+async def vote_comment(*, comment: models.Comment = Depends(resolve_comment), vote: int = Path(..., ge=-1, le=1),
+                       current_user: models.User = Depends(resolve_current_user), db: Session = Depends(get_db)):
     """Vote on a comment in a post."""
-    pass
+    return crud.vote_comment(db, comment_id=comment.id, author_id=current_user.id, vote=vote)
