@@ -20,5 +20,13 @@ class Comment(Base):
     author = relationship('User', back_populates='comments')
     parent_resub = relationship('Resub', back_populates='comments')
     parent_post = relationship('Post', back_populates='comments')
-
     replies = relationship('Comment')
+    votes = relationship('CommentVote')
+
+
+class CommentVote(Base):
+    __tablename__ = 'comments_votes'
+
+    comment_id = Column(Integer, ForeignKey('comments.id'), primary_key=True)
+    author_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    vote = Column(Integer)
