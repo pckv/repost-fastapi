@@ -26,8 +26,6 @@ class Post(Base):
 class PostVote(Base):
     __tablename__ = 'posts_votes'
 
-    id = Column(Integer, primary_key=True, index=True)
+    post_id = Column(Integer, ForeignKey('posts.id'), primary_key=True)
+    author_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     vote = Column(Integer)
-
-    post_id = Column(Integer, ForeignKey('posts.id'))
-    author_id = Column(Integer, ForeignKey('users.id'))
