@@ -76,7 +76,7 @@ async def edit_post(*, post: models.Post = Depends(resolve_user_owned_post), edi
     return crud.update_post(db, post_id=post.id, **edited_post.dict(exclude_unset=True))
 
 
-@router.patch('/{post_id}/{vote}',
+@router.patch('/{post_id}/{vote}', response_model=Post,
               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})

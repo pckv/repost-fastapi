@@ -45,7 +45,14 @@ def delete_post(db: Session, *, post_id: int):
 
 def vote_post(db: Session, *, post_id: int, author_id: int, vote: int):
     """Update a user's vote on a post."""
-    db_vote = PostVote(post_id=post_id, author_id=author_id, vote=vote)
-    db.add(db_vote)
+    db_vote = db.query(PostVote).filter_by(post_id=post_id, author_id=author_id).first()
+    if db_vote:
+        if vote == 0:
+            db.delete(db_vote)
+        else:
+            db_vote.vote = vote
+    elif vote != 0:
+        db.add(PostVote(post_id=post_id, author_id=author_id, vote=vote))
 
     db.commit()
+    return db.query(Post).filter_by(id=post_id).first()
