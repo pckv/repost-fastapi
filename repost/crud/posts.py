@@ -39,7 +39,8 @@ def update_post(db: Session, *, post_id: int, **columns: Any) -> Post:
 
 def delete_post(db: Session, *, post_id: int):
     """Delete the post with the given ID."""
-    db.query(Post).filter_by(id=post_id).delete()
+    db_post = db.query(Post).filter_by(id=post_id).first()
+    db.delete(db_post)
     db.commit()
 
 

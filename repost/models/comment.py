@@ -21,7 +21,7 @@ class Comment(Base):
     parent_resub = relationship('Resub', back_populates='comments')
     parent_post = relationship('Post', back_populates='comments')
     replies = relationship('Comment')
-    votes = relationship('CommentVote')
+    votes = relationship('CommentVote', cascade='delete')
 
 
 class CommentVote(Base):

@@ -20,7 +20,7 @@ class Post(Base):
     author = relationship('User', back_populates='posts')
     parent_resub = relationship('Resub', back_populates='posts')
     comments = relationship('Comment', back_populates='parent_post')
-    votes = relationship('PostVote')
+    votes = relationship('PostVote', cascade='delete')
 
 
 class PostVote(Base):
