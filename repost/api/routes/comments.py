@@ -5,37 +5,17 @@ post, and as such every endpoint must resolve both a resub and a post.
 This is implemented in the resolvers in `repost.resolvers`.
 """
 
-from typing import List
-
 from fastapi import APIRouter, Depends, Path
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST, \
     HTTP_201_CREATED
 
 from repost import models, crud
-from repost.api.resolvers import resolve_post, resolve_comment_for_comment_owner_or_resub_owner, resolve_comment, \
+from repost.api.resolvers import resolve_comment_for_comment_owner_or_resub_owner, resolve_comment, \
     resolve_user_owned_comment, resolve_current_user, get_db
 from repost.api.schemas import Comment, ErrorResponse, CreateComment, EditComment
 
 router = APIRouter()
-
-
-@router.get('/', response_model=List[Comment],
-            responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_comments(post: models.Post = Depends(resolve_post), db: Session = Depends(get_db)):
-    """Get all comments in post."""
-    return crud.get_comments(db, post.id)
-
-
-@router.post('/', response_model=Comment, status_code=HTTP_201_CREATED,
-             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
-                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def create_comment(*, post: models.Post = Depends(resolve_post), created_comment: CreateComment,
-                         current_user: models.User = Depends(resolve_current_user), db: Session = Depends(get_db)):
-    """Create a comment in a post."""
-    return crud.create_comment(db, author_id=current_user.id, parent_resub_id=post.parent_resub_id,
-                               parent_post_id=post.id, parent_comment_id=None, content=created_comment.content)
 
 
 @router.post('/{comment_id}', response_model=Comment, status_code=HTTP_201_CREATED,

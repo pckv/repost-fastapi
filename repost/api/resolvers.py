@@ -43,10 +43,7 @@ async def resolve_current_user(username: str = Depends(authorize_user), db: Sess
 
 
 async def resolve_resub(resub: str = Path(...), db: Session = Depends(get_db)) -> models.Resub:
-    """Verify the resub from path parameter.
-
-    Base path: /resubs/{resub}
-    """
+    """Verify the resub from path parameter."""
     db_resub = crud.get_resub(db, name=resub)
     if not db_resub:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'Resub \'{resub}\' not found')
@@ -56,22 +53,15 @@ async def resolve_resub(resub: str = Path(...), db: Session = Depends(get_db)) -
 
 async def resolve_user_owned_resub(resub: models.Resub = Depends(resolve_resub),
                                    current_user: models.User = Depends(resolve_current_user)) -> models.Resub:
-    """Verify that the authorized user owns the resub before returning.
-
-    Base path: /resubs/{resub}
-    """
+    """Verify that the authorized user owns the resub before returning."""
     if resub.owner != current_user:
         raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='You are not the owner of this resub')
 
     return resub
 
 
-async def resolve_post(resub: models.Resub = Depends(resolve_resub), post_id: int = Path(...),
-                       db: Session = Depends(get_db)) -> models.Post:
-    """Resolve the post from the path parameter.
-
-    Base path: /resubs/{resub}/posts/{post_id}
-    """
+async def resolve_post(post_id: int = Path(...), db: Session = Depends(get_db)) -> models.Post:
+    """Resolve the post from the path parameter."""
     db_post = crud.get_post(db, post_id=post_id)
     if not db_post:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'Post \'{post_id}\' not found')
@@ -81,33 +71,25 @@ async def resolve_post(resub: models.Resub = Depends(resolve_resub), post_id: in
 
 async def resolve_user_owned_post(post: models.Post = Depends(resolve_post),
                                   current_user: models.User = Depends(resolve_current_user)) -> models.Post:
-    """Verify that the authorized user owns the post before returning.
-
-    Base path: /resubs/{resub}/posts/{post_id}
-    """
+    """Verify that the authorized user owns the post before returning."""
     if post.author_id != current_user.id:
         raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='You are not the author of this post')
 
     return post
 
 
-async def resolve_post_for_post_owner_or_resub_owner(resub: models.Resub = Depends(resolve_resub),
-                                                     post: models.Post = Depends(resolve_post),
+async def resolve_post_for_post_owner_or_resub_owner(post: models.Post = Depends(resolve_post),
                                                      current_user: models.User = Depends(
                                                          resolve_current_user)) -> models.Post:
-    """Verify that the authorized user owns the post or owns the resub before returning.
-
-    Base path: /resubs/{resub}/posts/{post_id}
-    """
-    if current_user not in (post.author, resub.owner):
+    """Verify that the authorized user owns the post or owns the resub before returning."""
+    if current_user not in (post.author, post.parent_resub.owner):
         raise HTTPException(status_code=HTTP_403_FORBIDDEN,
                             detail='You are not the author of this post or the owner of this resub')
 
     return post
 
 
-async def resolve_comment(post: models.Post = Depends(resolve_post),
-                          comment_id: int = Path(...), db: Session = Depends(get_db)) -> models.Comment:
+async def resolve_comment(comment_id: int = Path(...), db: Session = Depends(get_db)) -> models.Comment:
     """ Resolve the comment from the path parameter. """
     db_comment = crud.get_comment(db, comment_id=comment_id)
     if not db_comment:
@@ -125,12 +107,11 @@ async def resolve_user_owned_comment(comment: models.Comment = Depends(resolve_c
     return comment
 
 
-async def resolve_comment_for_comment_owner_or_resub_owner(resub: models.Resub = Depends(resolve_resub),
-                                                           comment: models.Comment = Depends(resolve_comment),
+async def resolve_comment_for_comment_owner_or_resub_owner(comment: models.Comment = Depends(resolve_comment),
                                                            current_user: models.User = Depends(
                                                                resolve_current_user)) -> models.Comment:
     """ Verify that the authorized user owns the comment or owns the resub before returning. """
-    if current_user not in (comment.author, resub.owner):
+    if current_user not in (comment.author, comment.parent_resub.owner):
         raise HTTPException(status_code=HTTP_403_FORBIDDEN,
                             detail='You are not the author of this comment or the owner of this resub')
 

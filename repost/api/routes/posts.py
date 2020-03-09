@@ -13,32 +13,11 @@ from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_401_UN
     HTTP_201_CREATED
 
 from repost import crud, models
-from repost.api.resolvers import resolve_resub, resolve_post, resolve_user_owned_post, \
-    resolve_post_for_post_owner_or_resub_owner, resolve_current_user, get_db
-from repost.api.schemas import ErrorResponse, CreatePost, Post, EditPost
+from repost.api.resolvers import resolve_post, resolve_user_owned_post, resolve_post_for_post_owner_or_resub_owner, \
+    resolve_current_user, get_db
+from repost.api.schemas import ErrorResponse, Post, EditPost, Comment, CreateComment
 
 router = APIRouter()
-
-
-@router.get('/', response_model=List[Post],
-            responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_posts(resub: models.Resub = Depends(resolve_resub), db: Session = Depends(get_db)) -> List[models.Post]:
-    """Get all posts in a resub."""
-    return crud.get_posts(db, parent_resub_id=resub.id)
-
-
-@router.post('/', response_model=Post, status_code=HTTP_201_CREATED,
-             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
-                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def create_post(*, resub: models.Resub = Depends(resolve_resub),
-                      post: CreatePost, current_user: models.User = Depends(resolve_current_user),
-                      db: Session = Depends(get_db)) -> models.Post:
-    """Create a new post in a resub."""
-    post = crud.create_post(db, author_id=current_user.id, parent_resub_id=resub.id, title=post.title, url=post.url,
-                            content=post.content)
-
-    return post
 
 
 @router.get('/{post_id}', response_model=Post,
@@ -84,3 +63,22 @@ async def vote_post(*, post: models.Post = Depends(resolve_post), vote: int = Pa
                     current_user: models.User = Depends(resolve_current_user), db: Session = Depends(get_db)):
     """Vote on a post in a resub."""
     return crud.vote_post(db, post_id=post.id, author_id=current_user.id, vote=vote)
+
+
+@router.get('/{post_id}/comments', response_model=List[Comment],
+            responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def get_comments_in_post(post: models.Post = Depends(resolve_post), db: Session = Depends(get_db)):
+    """Get all comments in post."""
+    return crud.get_comments(db, post.id)
+
+
+@router.post('/{post_id}/comments', response_model=Comment, status_code=HTTP_201_CREATED,
+             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def create_comment_in_post(*, post: models.Post = Depends(resolve_post), created_comment: CreateComment,
+                                 current_user: models.User = Depends(resolve_current_user),
+                                 db: Session = Depends(get_db)):
+    """Create a comment in a post."""
+    return crud.create_comment(db, author_id=current_user.id, parent_resub_id=post.parent_resub_id,
+                               parent_post_id=post.id, parent_comment_id=None, content=created_comment.content)
