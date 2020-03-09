@@ -80,8 +80,7 @@ async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub),
 
 @router.get('/{resub}/posts', response_model=List[Post],
             responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
-async def get_posts_in_resub(resub: models.Resub = Depends(resolve_resub), db: Session = Depends(get_db)) -> List[
-    models.Post]:
+async def get_posts_in_resub(resub: models.Resub = Depends(resolve_resub), db: Session = Depends(get_db)):
     """Get all posts in a resub."""
     return crud.get_posts(db, parent_resub_id=resub.id)
 
@@ -92,7 +91,7 @@ async def get_posts_in_resub(resub: models.Resub = Depends(resolve_resub), db: S
                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def create_post_in_resub(*, resub: models.Resub = Depends(resolve_resub),
                                post: CreatePost, current_user: models.User = Depends(resolve_current_user),
-                               db: Session = Depends(get_db)) -> models.Post:
+                               db: Session = Depends(get_db)):
     """Create a new post in a resub."""
     post = crud.create_post(db, author_id=current_user.id, parent_resub_id=resub.id, title=post.title, url=post.url,
                             content=post.content)
