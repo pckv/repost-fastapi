@@ -1,6 +1,5 @@
 """API schemas for error responses."""
 
-
 from pydantic.main import BaseModel
 
 

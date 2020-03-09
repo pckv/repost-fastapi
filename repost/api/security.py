@@ -3,9 +3,8 @@
 from datetime import timedelta, datetime
 
 import jwt
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
 from repost import config
 
@@ -34,6 +33,6 @@ async def authorize_user(jwt_token: str = Depends(oauth2_scheme)) -> str:
     try:
         return get_jwt_token_username(jwt_token)
     except jwt.exceptions.ExpiredSignatureError:
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail='The JSON Web Token has expired')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='The JSON Web Token has expired')
     except jwt.exceptions.DecodeError as e:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f'Failed to parse JSON Web Token: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Failed to parse JSON Web Token: {str(e)}')

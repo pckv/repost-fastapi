@@ -7,7 +7,7 @@ Authors: pckv, EspenK, jonsondrem
 __version__ = '0.0.1'
 
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from repost import models, config
 from repost.api import api_router
