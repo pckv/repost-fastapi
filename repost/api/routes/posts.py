@@ -64,16 +64,16 @@ async def vote_post(*, post: models.Post = Depends(resolve_post), vote: int = Pa
 
 
 @router.get('/{post_id}/comments', response_model=List[Comment],
-            responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+            responses={status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def get_comments_in_post(post: models.Post = Depends(resolve_post), db: Session = Depends(get_db)):
     """Get all comments in post."""
     return crud.get_comments(db, post.id)
 
 
-@router.post('/{post_id}/comments', response_model=Comment, status_code=HTTP_201_CREATED,
-             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
-                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+@router.post('/{post_id}/comments', response_model=Comment, status_code=status.HTTP_201_CREATED,
+             responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                        status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def create_comment_in_post(*, post: models.Post = Depends(resolve_post), created_comment: CreateComment,
                                  current_user: models.User = Depends(resolve_current_user),
                                  db: Session = Depends(get_db)):

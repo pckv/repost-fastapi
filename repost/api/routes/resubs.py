@@ -77,16 +77,16 @@ async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub),
 
 
 @router.get('/{resub}/posts', response_model=List[Post],
-            responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+            responses={status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def get_posts_in_resub(resub: models.Resub = Depends(resolve_resub), db: Session = Depends(get_db)):
     """Get all posts in a resub."""
     return crud.get_posts(db, parent_resub_id=resub.id)
 
 
-@router.post('/{resub}/posts', response_model=Post, status_code=HTTP_201_CREATED,
-             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
-                        HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+@router.post('/{resub}/posts', response_model=Post, status_code=status.HTTP_201_CREATED,
+             responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                        status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def create_post_in_resub(*, resub: models.Resub = Depends(resolve_resub),
                                post: CreatePost, current_user: models.User = Depends(resolve_current_user),
                                db: Session = Depends(get_db)):
