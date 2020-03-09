@@ -6,10 +6,8 @@ posts.
 
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, \
-    HTTP_201_CREATED
 
 from repost import crud, models
 from repost.api.resolvers import resolve_resub, resolve_user_owned_resub, resolve_current_user, get_db, resolve_user
@@ -24,31 +22,31 @@ async def get_resubs(db: Session = Depends(get_db)):
     return crud.get_resubs(db)
 
 
-@router.post('/', response_model=Resub, status_code=HTTP_201_CREATED,
-             responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                        HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
+@router.post('/', response_model=Resub, status_code=status.HTTP_201_CREATED,
+             responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
 async def create_resub(resub: CreateResub, current_user: models.User = Depends(resolve_current_user),
                        db: Session = Depends(get_db)):
     """Create a new resub."""
     db_resub = crud.get_resub(db, name=resub.name)
     if db_resub:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f'Resub \'{resub.name}\' already exists')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Resub \'{resub.name}\' already exists')
 
     return crud.create_resub(db, owner_id=current_user.id, name=resub.name, description=resub.description)
 
 
 @router.get('/{resub}', response_model=Resub,
-            responses={HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+            responses={status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def get_resub(resub: models.Resub = Depends(resolve_resub)):
     """Get a specific resub."""
     return resub
 
 
 @router.delete('/{resub}',
-               responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                          HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
-                          HTTP_403_FORBIDDEN: {'model': ErrorResponse},
-                          HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+               responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                          status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                          status.HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+                          status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def delete_resub(resub: models.Resub = Depends(resolve_user_owned_resub), db: Session = Depends(get_db)):
     """Delete a resub.
 
@@ -58,10 +56,10 @@ async def delete_resub(resub: models.Resub = Depends(resolve_user_owned_resub), 
 
 
 @router.patch('/{resub}', response_model=Resub,
-              responses={HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
-                         HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
-                         HTTP_403_FORBIDDEN: {'model': ErrorResponse},
-                         HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+              responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                         status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                         status.HTTP_403_FORBIDDEN: {'model': ErrorResponse},
+                         status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub), edited_resub: EditResub,
                      db: Session = Depends(get_db)):
     """Edit a resub.
