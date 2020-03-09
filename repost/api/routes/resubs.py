@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from repost import crud, models
 from repost.api.resolvers import resolve_resub, resolve_user_owned_resub, resolve_current_user, get_db, resolve_user
-from repost.api.schemas import Resub, CreateResub, EditResub, ErrorResponse
+from repost.api.schemas import Resub, CreateResub, EditResub, ErrorResponse, Post, CreatePost
 
 router = APIRouter()
 
@@ -74,3 +74,24 @@ async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub),
         updated['owner_id'] = db_user.id
 
     return crud.update_resub(db, name=resub.name, **updated)
+
+
+@router.get('/{resub}/posts', response_model=List[Post],
+            responses={status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def get_posts_in_resub(resub: models.Resub = Depends(resolve_resub), db: Session = Depends(get_db)):
+    """Get all posts in a resub."""
+    return crud.get_posts(db, parent_resub_id=resub.id)
+
+
+@router.post('/{resub}/posts', response_model=Post, status_code=status.HTTP_201_CREATED,
+             responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
+                        status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
+                        status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
+async def create_post_in_resub(*, resub: models.Resub = Depends(resolve_resub),
+                               post: CreatePost, current_user: models.User = Depends(resolve_current_user),
+                               db: Session = Depends(get_db)):
+    """Create a new post in a resub."""
+    post = crud.create_post(db, author_id=current_user.id, parent_resub_id=resub.id, title=post.title, url=post.url,
+                            content=post.content)
+
+    return post
