@@ -19,6 +19,6 @@ async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestF
     """Authorize using username and password."""
     db_user = crud.get_user(db, username=form_data.username)
     if not db_user or not verify_password(form_data.password, db_user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid login information')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid login information')
 
     return OAuth2Token(access_token=create_jwt_token(username=db_user.username), token_type='bearer')

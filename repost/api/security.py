@@ -35,4 +35,5 @@ async def authorize_user(jwt_token: str = Depends(oauth2_scheme)) -> str:
     except jwt.exceptions.ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='The JSON Web Token has expired')
     except jwt.exceptions.DecodeError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Failed to parse JSON Web Token: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'Failed to parse JSON Web Token: {str(e)}')
