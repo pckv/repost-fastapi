@@ -25,7 +25,7 @@ async def get_post(post: models.Post = Depends(resolve_post)):
     return post
 
 
-@router.delete('/{post_id}',
+@router.delete('/{post_id}', status_code=status.HTTP_204_NO_CONTENT,
                responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                           status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                           status.HTTP_403_FORBIDDEN: {'model': ErrorResponse},

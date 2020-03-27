@@ -28,7 +28,7 @@ async def create_reply(*, comment: models.Comment = Depends(resolve_comment), cr
                                content=created_comment.content)
 
 
-@router.delete('/{comment_id}',
+@router.delete('/{comment_id}', status_code=status.HTTP_204_NO_CONTENT,
                responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                           status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                           status.HTTP_403_FORBIDDEN: {'model': ErrorResponse},
