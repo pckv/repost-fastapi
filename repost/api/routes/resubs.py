@@ -42,7 +42,7 @@ async def get_resub(resub: models.Resub = Depends(resolve_resub)):
     return resub
 
 
-@router.delete('/{resub}',
+@router.delete('/{resub}', status_code=status.HTTP_204_NO_CONTENT,
                responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                           status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse},
                           status.HTTP_403_FORBIDDEN: {'model': ErrorResponse},

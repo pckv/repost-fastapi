@@ -40,7 +40,7 @@ async def edit_current_user(*, current_user: models.User = Depends(get_current_u
     return crud.update_user(db, username=current_user.username, **edited_user.dict(exclude_unset=True))
 
 
-@router.delete('/me',
+@router.delete('/me', status_code=status.HTTP_204_NO_CONTENT,
                responses={status.HTTP_400_BAD_REQUEST: {'model': ErrorResponse},
                           status.HTTP_401_UNAUTHORIZED: {'model': ErrorResponse}})
 async def delete_current_user(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
