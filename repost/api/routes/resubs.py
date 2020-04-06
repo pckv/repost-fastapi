@@ -64,7 +64,7 @@ async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub),
                      db: Session = Depends(get_db)):
     """Edit a resub.
 
-    Only the owner of a resub can delete the resub.
+    Only the owner of a resub can edit the resub.
     """
     updated = edited_resub.dict(exclude_unset=True)
 
