@@ -1,6 +1,6 @@
 """Dependencies for resolving and verifying paths and ownership."""
 
-from fastapi import Path, Depends, HTTPException, status
+from fastapi import Path, Depends, HTTPException, status, Security
 from sqlalchemy.orm import Session
 
 from repost import crud
@@ -31,7 +31,8 @@ def resolve_user(username: str = Path(...), db: Session = Depends(get_db)) -> mo
     return db_user
 
 
-async def resolve_current_user(username: str = Depends(authorize_user), db: Session = Depends(get_db)) -> models.User:
+async def resolve_current_user(username: str = Security(authorize_user, scopes=['user']),
+                               db: Session = Depends(get_db)) -> models.User:
     """Resolve the currently authorized User."""
     db_user = crud.get_user(db, username=username)
     if not db_user:

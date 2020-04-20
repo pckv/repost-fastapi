@@ -7,3 +7,4 @@ class OAuth2Token(BaseModel):
     """Schema for an OAuth2 token"""
     access_token: str
     token_type: str
+    scope: str
