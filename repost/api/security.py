@@ -31,7 +31,13 @@ def decode_jwt_token(jwt_token: str) -> dict:
 
 async def authorize_user(security_scopes: SecurityScopes, jwt_token: str = Depends(oauth2_scheme)) -> str:
     """Validate and return the username in the JSON Web Token."""
-    payload = decode_jwt_token(jwt_token)
+    try:
+        payload = decode_jwt_token(jwt_token)
+    except jwt.exceptions.ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='The JSON Web Token has expired')
+    except jwt.exceptions.DecodeError as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'Failed to parse JSON Web Token: {str(e)}')
 
     # Verify that the user has the required scopes for this endpoint
     scopes = payload.get('scopes', [])
@@ -39,10 +45,4 @@ async def authorize_user(security_scopes: SecurityScopes, jwt_token: str = Depen
         if scope not in scopes:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'Missing scope \'{scope}\'')
 
-    try:
-        return payload.get('sub')
-    except jwt.exceptions.ExpiredSignatureError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='The JSON Web Token has expired')
-    except jwt.exceptions.DecodeError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'Failed to parse JSON Web Token: {str(e)}')
+    return payload.get('sub')
