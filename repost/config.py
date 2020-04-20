@@ -11,6 +11,7 @@ env_path = Path.cwd() / 'config.env'
 @dataclass
 class Config:
     """Definition and defaults for package configuration."""
+    client_id: str = 'repost'
     jwt_secret: str = secrets.token_hex(32)
     jwt_algorithm: str = 'HS256'
     database_url: str = 'sqlite:///./repost.db'
