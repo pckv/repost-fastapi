@@ -1,3 +1,5 @@
+"""Singleton configuration based on environment variables."""
+
 import os
 import secrets
 from dataclasses import dataclass, asdict
@@ -17,7 +19,7 @@ class Config:
     jwt_algorithm: str = 'HS256'
     database_url: str = 'sqlite:///./repost.db'
 
-    def initialize(self):
+    def __init__(self):
         """Initialize and load the config instance."""
         # Initialize config file with defaults if it does not exist
         if not env_path.exists():
