@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from repost.models import Post, PostVote
 
 
-def get_posts(db: Session, *, parent_resub_id: int) -> List[Post]:
+def get_posts(db: Session, *, parent_resub_id: int, offset: int = 0, limit: int = 100) -> List[Post]:
     """Get all posts in a resub."""
-    return db.query(Post).filter_by(parent_resub_id=parent_resub_id).all()
+    return db.query(Post).filter_by(parent_resub_id=parent_resub_id).offset(offset).limit(limit).all()
 
 
 def get_post(db: Session, *, post_id: int) -> Optional[Post]:
