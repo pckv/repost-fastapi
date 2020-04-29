@@ -17,9 +17,9 @@ router = APIRouter()
 
 
 @router.get('/', response_model=List[Resub])
-async def get_resubs(db: Session = Depends(get_db), offset: int = 0, limit: int = 100):
+async def get_resubs(db: Session = Depends(get_db), page: int = 0, page_size: int = 100):
     """Get all resubs."""
-    return crud.get_resubs(db, offset=offset, limit=limit)
+    return crud.get_resubs(db, offset=page * page_size, limit=page_size)
 
 
 @router.post('/', response_model=Resub, status_code=status.HTTP_201_CREATED,
@@ -79,9 +79,9 @@ async def edit_resub(*, resub: models.Resub = Depends(resolve_user_owned_resub),
 @router.get('/{resub}/posts', response_model=List[Post],
             responses={status.HTTP_404_NOT_FOUND: {'model': ErrorResponse}})
 async def get_posts_in_resub(resub: models.Resub = Depends(resolve_resub), db: Session = Depends(get_db),
-                             offset: int = 0, limit: int = 100):
+                             page: int = 0, page_size: int = 100):
     """Get all posts in a resub."""
-    return crud.get_posts(db, parent_resub_id=resub.id, offset=offset, limit=limit)
+    return crud.get_posts(db, parent_resub_id=resub.id, offset=page * page_size, limit=page_size)
 
 
 @router.post('/{resub}/posts', response_model=Post, status_code=status.HTTP_201_CREATED,
