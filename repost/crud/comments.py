@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from repost.models import Comment, CommentVote
 
 
-def get_comments(db: Session, post_id: int) -> List[Comment]:
+def get_comments(db: Session, post_id: int, offset: int = 0, limit: int = 100) -> List[Comment]:
     """Get all comments in a post with the speficied ID."""
-    return db.query(Comment).filter_by(parent_post_id=post_id).all()
+    return db.query(Comment).filter_by(parent_post_id=post_id).offset(offset).limit(limit).all()
 
 
 def get_comment(db: Session, comment_id: int) -> Comment:
