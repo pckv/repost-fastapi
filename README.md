@@ -34,6 +34,19 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Configurations
+Configurations are set by environment variables. Follow the instructions below to run
+the server once and a file `config.env` will be created in the root directory. Otherwise,
+the following settings can also be set using exported environment variables.
+
+- **REPOST_CLIENT_ID** - The OAuth2 client_id. Default is `repost`
+- **REPOST_JWT_SECRET** - The secret key used for [JSON Web Tokens](https://jwt.io/)
+- **REPOST_JWT_ALGORIGHTM** - The algorithm used for the key above
+- **REPOST_DATABASE_UrL** - An SQLAlchemy database url. See 
+[Engine Configuration](https://docs.sqlalchemy.org/en/13/core/engines.html)
+- **REPOST_ORIGINS** - A list of 
+[CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) URLs separated by `;`
+
 ## Running the API with uvicorn
 [Uvicorn](https://www.uvicorn.org/) is a single-threaded ASGI server designed around
 uvloop to run fast. It is included in the requirements and should be used to run the
