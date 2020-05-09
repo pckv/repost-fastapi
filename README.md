@@ -6,12 +6,12 @@ Python 3 must be installed and accessible through the use of a terminal and the
 keyword `python` or `python3`. Below are the steps for a proper setup using VENV
 (Python Virtual Environment).
 
-1. Clone the repository:
+1. Clone the repository
 ```bash
 git clone https://github.com/pckv/repost-fastapi.git
 ```
 
-2. Navigate to the `repost-fastapi` directory and create a new VENV:
+2. Navigate to the `repost-fastapi` directory and create a new VENV
 ```bash
 cd repost-fastapi
 python -m venv venv
@@ -42,7 +42,7 @@ the following settings can also be set using exported environment variables.
 - **REPOST_CLIENT_ID** - The OAuth2 client_id. Default is `repost`
 - **REPOST_JWT_SECRET** - The secret key used for [JSON Web Tokens](https://jwt.io/)
 - **REPOST_JWT_ALGORIGHTM** - The algorithm used for the key above
-- **REPOST_DATABASE_UrL** - An SQLAlchemy database url. See 
+- **REPOST_DATABASE_URL** - An SQLAlchemy database url. See 
 [Engine Configuration](https://docs.sqlalchemy.org/en/13/core/engines.html)
 - **REPOST_ORIGINS** - A list of 
 [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) URLs separated by `;`
@@ -50,14 +50,14 @@ the following settings can also be set using exported environment variables.
 ## Running the API with uvicorn
 [Uvicorn](https://www.uvicorn.org/) is a single-threaded ASGI server designed around
 uvloop to run fast. It is included in the requirements and should be used to run the
-API:
+API.
 ```bash
 uvicorn repost:app
 ```
 
 The default host and port is `localhost` and `8000`. They can be changed with the
 `--host` and `--port` arguments. To run the server publically, set the host to 
-`0.0.0.0` like so:
+`0.0.0.0` like so.
 ```bash
 uvicorn repost:app --host 0.0.0.0
 ```
