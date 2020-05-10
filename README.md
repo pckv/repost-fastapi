@@ -2,7 +2,7 @@
 This is the FastAPI implementation of the Repost API.
 
 ## Installation
-Python 3 must be installed and accessible through the use of a terminal and the
+[Python 3](https://www.python.org/) must be installed and accessible through the use of a terminal and the
 keyword `python` or `python3`. Below are the steps for a proper setup using VENV
 (Python Virtual Environment).
 
@@ -24,7 +24,7 @@ source venv/bin/activate
 ```
 
 3 (**Windows**). Activate the venv (alternatively: run all commands after this step 
-prefixedwith `venv\Scripts\`)
+prefixed with `venv\Scripts\`)
 ```ps
 venv\Scripts\activate
 ```
