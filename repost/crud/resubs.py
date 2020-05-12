@@ -7,7 +7,7 @@ from repost.models import Resub
 
 def get_resubs(db: Session, offset: int = 0, limit: int = 100) -> List[Resub]:
     """Get all resubs."""
-    return db.query(Resub).offset(offset).limit(limit).all()
+    return db.query(Resub).order_by(Resub.created.desc()).offset(offset).limit(limit).all()
 
 
 def get_resub(db: Session, *, name: str) -> Optional[Resub]:
