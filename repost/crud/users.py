@@ -40,14 +40,15 @@ def delete_user(db: Session, *, username: str):
 
 def get_resubs_by_user(db: Session, user_id: int, offset: int = 0, limit: int = 100) -> List[Resub]:
     """Get all resubs by a user with the specified ID."""
-    return db.query(Resub).filter_by(owner_id=user_id).offset(offset).limit(limit).all()
+    return db.query(Resub).filter_by(owner_id=user_id).order_by(Resub.created.desc()).offset(offset).limit(limit).all()
 
 
 def get_posts_by_user(db: Session, user_id: int, offset: int = 0, limit: int = 100) -> List[Post]:
     """Get all posts by a user with the specified ID."""
-    return db.query(Post).filter_by(author_id=user_id).offset(offset).limit(limit).all()
+    return db.query(Post).filter_by(author_id=user_id).order_by(Post.created.desc()).offset(offset).limit(limit).all()
 
 
 def get_comments_by_user(db: Session, user_id: int, offset: int = 0, limit: int = 100) -> List[Comment]:
     """Get all comments by a user with the specified ID."""
-    return db.query(Comment).filter_by(author_id=user_id).offset(offset).limit(limit).all()
+    return db.query(Comment).filter_by(author_id=user_id).order_by(Comment.created.desc()).offset(offset).limit(
+        limit).all()
